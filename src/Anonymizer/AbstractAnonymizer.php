@@ -97,9 +97,9 @@ abstract class AbstractAnonymizer
 
         $entityConfig = $this->configEntites[$entity];
 
-        $actions = '';
+        $actions = 0;
         if (array_key_exists('delete', $entityConfig) && $entityConfig['delete'] === true) {
-            $actions |= self::TRUNCATE_TABLE;
+            $actions += self::TRUNCATE_TABLE;
         }
 
         if (array_key_exists('cols', $entityConfig)) {
