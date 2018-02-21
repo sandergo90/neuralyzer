@@ -4,15 +4,15 @@
  *
  * PHP Version 5.3 -> 7.0
  *
- * @author Emmanuel Dyan
- * @author Rémi Sauvat
+ * @author    Emmanuel Dyan
+ * @author    Rémi Sauvat
  * @copyright 2005-2015 iNet Process
  *
- * @package inetprocess/neuralyzer
+ * @package   inetprocess/neuralyzer
  *
- * @license GNU General Public License v2.0
+ * @license   GNU General Public License v2.0
  *
- * @link http://www.inetprocess.com
+ * @link      http://www.inetprocess.com
  */
 
 namespace Inet\Neuralyzer\Anonymizer;
@@ -43,11 +43,16 @@ abstract class AbstractAnonymizer
     protected $configuration;
 
     /**
+     * @var string
+     */
+    protected $locale;
+
+    /**
      * Configuration of entities
      *
      * @var array
      */
-    protected $configEntites = array();
+    protected $configEntites = [];
 
     /**
      * Process the entity according to the anonymizer type
@@ -69,6 +74,14 @@ abstract class AbstractAnonymizer
         $this->configuration = $configuration;
         $configEntites = $configuration->getConfigValues();
         $this->configEntites = $configEntites['entities'];
+    }
+
+    /**
+     * @param string $locale
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
     }
 
     /**
@@ -125,13 +138,13 @@ abstract class AbstractAnonymizer
     {
         $this->checkEntityIsInConfig($entity);
 
-        $faker = \Faker\Factory::create();
+        $faker = \Faker\Factory::create($this->locale);
 
         $entityCols = $this->configEntites[$entity]['cols'];
-        $entity = array();
+        $entity = [];
         foreach ($entityCols as $colName => $colProps) {
-            $args = empty($colProps['params']) ? array() : $colProps['params'];
-            $data = call_user_func_array(array($faker, $colProps['method']), $args);
+            $args = empty($colProps['params']) ? [] : $colProps['params'];
+            $data = call_user_func_array([$faker, $colProps['method']], $args);
             $entity[$colName] = $data;
         }
 

@@ -135,6 +135,7 @@ class AnonRunCommand extends Command
         // Now work on the DB
         $anon = new \Inet\Neuralyzer\Anonymizer\DB($pdo);
         $anon->setConfiguration($reader);
+        $anon->setLocale($reader->getLocale());
 
         $stopwatch = new Stopwatch();
         $stopwatch->start('Neuralyzer');

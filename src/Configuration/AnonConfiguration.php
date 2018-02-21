@@ -17,6 +17,7 @@
 
 namespace Inet\Neuralyzer\Configuration;
 
+use Faker\Factory;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 
@@ -48,6 +49,7 @@ class AnonConfiguration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('guesser_version')->isRequired()->end()
+                ->scalarNode('locale')->defaultValue(Factory::DEFAULT_LOCALE)->end()
                 ->arrayNode('entities')
                     ->isRequired()
                     ->requiresAtLeastOneElement()
