@@ -125,10 +125,10 @@ class Reader
      */
     protected function parseAndValidateConfig()
     {
-        $this->configValues = Yaml::parse(file_get_contents($this->configFilePath));
+        $values = Yaml::parse(file_get_contents($this->configFilePath));
 
         $processor = new Processor();
         $configuration = new AnonConfiguration();
-        $processor->processConfiguration($configuration, [$this->configValues]);
+        $this->configValues = $processor->processConfiguration($configuration, [$values]);
     }
 }
