@@ -93,6 +93,26 @@ class Reader
     }
 
     /**
+     * Return the list of entites
+     *
+     * @return array
+     */
+    public function getPreQueries()
+    {
+        return $this->configValues['pre_queries'];
+    }
+
+    /**
+     * Return the list of entites
+     *
+     * @return array
+     */
+    public function getPostQueries()
+    {
+        return $this->configValues['post_queries'];
+    }
+
+    /**
      * @return mixed
      */
     public function getLocale()
