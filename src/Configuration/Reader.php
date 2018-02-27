@@ -107,6 +107,16 @@ class Reader
      *
      * @return array
      */
+    public function getPreDecryptQueries()
+    {
+        return $this->configValues['pre_decrypt_queries'];
+    }
+
+    /**
+     * Return the list of entites
+     *
+     * @return array
+     */
     public function getMysqlConfig()
     {
         return $this->configValues['mysql_config'];
