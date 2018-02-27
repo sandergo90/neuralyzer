@@ -107,6 +107,16 @@ class Reader
      *
      * @return array
      */
+    public function getMysqlConfig()
+    {
+        return $this->configValues['mysql_config'];
+    }
+
+    /**
+     * Return the list of entites
+     *
+     * @return array
+     */
     public function getPostQueries()
     {
         return $this->configValues['post_queries'];
