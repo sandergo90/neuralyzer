@@ -130,7 +130,7 @@ abstract class AbstractAnonymizer
     {
         $this->checkEntityIsInConfig($entity);
 
-        $faker = \Faker\Factory::create();
+        $faker = \Faker\Factory::create($this->configuration->getLocale());
 
         $entityCols = $this->configEntites[$entity]['cols'];
         $entity = [];

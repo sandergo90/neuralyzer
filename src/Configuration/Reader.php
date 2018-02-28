@@ -4,15 +4,15 @@
  *
  * PHP Version 7.0
  *
- * @author Emmanuel Dyan
- * @author Rémi Sauvat
+ * @author    Emmanuel Dyan
+ * @author    Rémi Sauvat
  * @copyright 2017 Emmanuel Dyan
  *
- * @package edyan/neuralyzer
+ * @package   edyan/neuralyzer
  *
- * @license GNU General Public License v2.0
+ * @license   GNU General Public License v2.0
  *
- * @link https://github.com/edyan/neuralyzer
+ * @link      https://github.com/edyan/neuralyzer
  */
 
 namespace Inet\Neuralyzer\Configuration;
@@ -90,6 +90,54 @@ class Reader
     public function getEntities(): array
     {
         return array_keys($this->configValues['entities']);
+    }
+
+    /**
+     * Return the list of entites
+     *
+     * @return array
+     */
+    public function getPreQueries()
+    {
+        return $this->configValues['pre_queries'];
+    }
+
+    /**
+     * Return the list of entites
+     *
+     * @return array
+     */
+    public function getPreDecryptQueries()
+    {
+        return $this->configValues['pre_decrypt_queries'];
+    }
+
+    /**
+     * Return the list of entites
+     *
+     * @return array
+     */
+    public function getMysqlConfig()
+    {
+        return $this->configValues['mysql_config'];
+    }
+
+    /**
+     * Return the list of entites
+     *
+     * @return array
+     */
+    public function getPostQueries()
+    {
+        return $this->configValues['post_queries'];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLocale()
+    {
+        return $this->configValues['locale'];
     }
 
     /**

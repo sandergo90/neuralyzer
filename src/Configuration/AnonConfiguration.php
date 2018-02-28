@@ -17,6 +17,7 @@
 
 namespace Inet\Neuralyzer\Configuration;
 
+use Faker\Factory;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 
@@ -48,6 +49,26 @@ class AnonConfiguration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('guesser_version')->isRequired()->end()
+                ->scalarNode('locale')->defaultValue(Factory::DEFAULT_LOCALE)->end()
+                ->arrayNode('pre_decrypt_queries')
+                    ->defaultValue(array())
+                    ->normalizeKeys(false)
+                    ->info('The list of queries to execute before decrypting')
+                    ->prototype('scalar')->end()
+                ->end()
+                ->arrayNode('pre_queries')
+                    ->defaultValue(array())
+                    ->normalizeKeys(false)
+                    ->info('The list of queries to execute before anonymize')
+                    ->prototype('scalar')->end()
+                ->end()
+                ->arrayNode('mysql_config')
+                    ->children()
+                        ->scalarNode('host')->isRequired()->end()
+                        ->scalarNode('user')->isRequired()->end()
+                        ->scalarNode('password')->isRequired()->end()
+                    ->end()
+                ->end()
                 ->arrayNode('entities')
                     ->isRequired()
                     ->requiresAtLeastOneElement()
@@ -68,6 +89,12 @@ class AnonConfiguration implements ConfigurationInterface
                             ->scalarNode('delete_where')->cannotBeEmpty()->end()
                         ->end()
                     ->end()
+                ->end()
+                ->arrayNode('post_queries')
+                    ->defaultValue(array())
+                    ->normalizeKeys(false)
+                    ->info('The list of queries to execute before anonymize')
+                    ->prototype('scalar')->end()
                 ->end()
             ->end()
         ;
