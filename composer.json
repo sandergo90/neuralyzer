@@ -32,5 +32,10 @@
         "psr-4": {
             "Inet\\Neuralyzer\\Tests\\": "tests/"
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.4-dev"
+        }
     }
 }
