@@ -141,6 +141,22 @@ class Reader
     }
 
     /**
+     * @return mixed
+     */
+    public function getCharset()
+    {
+        return $this->configValues['charset'];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCollate()
+    {
+        return $this->configValues['collate'];
+    }
+
+    /**
      * Parse and validate the configuration
      */
     protected function parseAndValidateConfig()

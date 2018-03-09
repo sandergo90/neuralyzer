@@ -3,6 +3,7 @@
 namespace Inet\Neuralyzer\Loader;
 
 use Symfony\Component\Config\Loader\FileLoader;
+use Symfony\Component\Yaml\Parser as YamlParser;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -12,25 +13,36 @@ use Symfony\Component\Yaml\Yaml;
  */
 class YamlConfigLoader extends FileLoader
 {
-    /** @var string */
-    private $parsed;
+    /** @var array */
+    private $parsed = [];
+
+    /** @var YamlParser */
+    private $yamlParser;
 
     public function load($resource, $type = null)
     {
-        $values = Yaml::parse(file_get_contents($resource));
+        $path = $this->locator->locate($resource);
 
-        $this->parseImports($values, $resource);
-
-        if (!isset($values['imports'])) {
-            $this->parsed = $values;
+        if (null === $this->yamlParser) {
+            $this->yamlParser = new YamlParser();
         }
 
-        if (isset($values['imports'])) {
-            unset($values['imports']);
-            $values = array_merge($this->parsed, $values);
+        $content = $this->yamlParser->parseFile($path, Yaml::PARSE_CONSTANT | Yaml::PARSE_CUSTOM_TAGS);
+
+        // empty file
+        if (null === $content) {
+            return;
         }
 
-        return $values;
+        // parameters
+        $this->parsed = array_merge_recursive($this->parsed, $content);
+
+        // imports
+        $this->parseImports($content, $path);
+
+        unset($this->parsed['imports']);
+
+        return $this->parsed;
     }
 
     /**

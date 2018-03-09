@@ -50,6 +50,8 @@ class AnonConfiguration implements ConfigurationInterface
             ->children()
                 ->scalarNode('guesser_version')->isRequired()->end()
                 ->scalarNode('locale')->defaultValue(Factory::DEFAULT_LOCALE)->end()
+                ->scalarNode('charset')->defaultValue('utf8')->end()
+                ->scalarNode('collate')->defaultValue('utf8_unicode_ci')->end()
                 ->arrayNode('pre_decrypt_queries')
                     ->defaultValue(array())
                     ->normalizeKeys(false)

@@ -126,17 +126,18 @@ abstract class AbstractAnonymizer
      *
      * @return array
      */
-    public function generateFakeData(string $entity): array
+    public function generateFakeData(string $entity, $faker): array
     {
         $this->checkEntityIsInConfig($entity);
-
-        $faker = \Faker\Factory::create($this->configuration->getLocale());
 
         $entityCols = $this->configEntites[$entity]['cols'];
         $entity = [];
         foreach ($entityCols as $colName => $colProps) {
             $args = empty($colProps['params']) ? [] : $colProps['params'];
             $data = call_user_func_array([$faker, $colProps['method']], $args);
+            if ($data instanceof \DateTime) {
+                $data = $data->format('Y-m-d H:i:s');
+            }
             $entity[$colName] = $data;
         }
 
