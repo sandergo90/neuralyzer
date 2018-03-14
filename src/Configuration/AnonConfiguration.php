@@ -88,7 +88,7 @@ class AnonConfiguration implements ConfigurationInterface
                 ->arrayNode('post_queries')
                     ->defaultValue(array())
                     ->normalizeKeys(false)
-                    ->info('The list of queries to execute before anonymize')
+                    ->info('The list of queries to execute after anonymize')
                     ->prototype('scalar')->end()
                 ->end()
             ->end()
