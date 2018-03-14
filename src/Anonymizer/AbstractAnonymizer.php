@@ -17,6 +17,8 @@
 
 namespace Inet\Neuralyzer\Anonymizer;
 
+use Faker\Factory;
+use Faker\UniqueGenerator;
 use Inet\Neuralyzer\Configuration\Reader;
 use Inet\Neuralyzer\Exception\InetAnonConfigurationException;
 
@@ -130,21 +132,23 @@ abstract class AbstractAnonymizer
     /**
      * Generate fake data for an entity and return it as an Array
      *
-     * @param string $entity
+     * @param string  $entity
+     * @param UniqueGenerator $faker
      *
      * @return array
      */
-    public function generateFakeData($entity)
+    public function generateFakeData($entity, UniqueGenerator $faker)
     {
         $this->checkEntityIsInConfig($entity);
-
-        $faker = \Faker\Factory::create($this->locale);
 
         $entityCols = $this->configEntites[$entity]['cols'];
         $entity = [];
         foreach ($entityCols as $colName => $colProps) {
             $args = empty($colProps['params']) ? [] : $colProps['params'];
             $data = call_user_func_array([$faker, $colProps['method']], $args);
+            if ($data instanceof \DateTime) {
+                $data = $data->format('Y-m-d H:i:s');
+            }
             $entity[$colName] = $data;
         }
 

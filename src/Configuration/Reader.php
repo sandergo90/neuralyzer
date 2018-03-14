@@ -17,9 +17,11 @@
 
 namespace Inet\Neuralyzer\Configuration;
 
+use Inet\Neuralyzer\Loader\YamlConfigLoader;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Config\Loader\DelegatingLoader;
+use Symfony\Component\Config\Loader\LoaderResolver;
 
 /**
  * Configuration Reader
@@ -56,6 +58,11 @@ class Reader
     protected $configValues = [];
 
     /**
+     * @var FileLocator
+     */
+    private $locator;
+
+    /**
      * Constructor
      *
      * @param string $configFileName
@@ -66,8 +73,8 @@ class Reader
         $this->configFileName = $configFileName;
         $this->configDirectories = $configDirectories;
 
-        $locator = new FileLocator($this->configDirectories);
-        $this->configFilePath = $locator->locate($this->configFileName);
+        $this->locator = new FileLocator($this->configDirectories);
+        $this->configFilePath = $this->locator->locate($this->configFileName);
 
         $this->parseAndValidateConfig();
     }
@@ -107,16 +114,6 @@ class Reader
      *
      * @return array
      */
-    public function getMysqlConfig()
-    {
-        return $this->configValues['mysql_config'];
-    }
-
-    /**
-     * Return the list of entites
-     *
-     * @return array
-     */
     public function getPostQueries()
     {
         return $this->configValues['post_queries'];
@@ -131,11 +128,30 @@ class Reader
     }
 
     /**
+     * @return mixed
+     */
+    public function getCharset()
+    {
+        return $this->configValues['charset'];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCollate()
+    {
+        return $this->configValues['collate'];
+    }
+
+    /**
      * Parse and validate the configuration
      */
     protected function parseAndValidateConfig()
     {
-        $values = Yaml::parse(file_get_contents($this->configFilePath));
+        $loaderResolver = new LoaderResolver(array(new YamlConfigLoader($this->locator)));
+        $delegatingLoader = new DelegatingLoader($loaderResolver);
+
+        $values = $delegatingLoader->load($this->configFilePath);
 
         $processor = new Processor();
         $configuration = new AnonConfiguration();
