@@ -4,15 +4,15 @@
  *
  * PHP Version 7.0
  *
- * @author Emmanuel Dyan
- * @author Rémi Sauvat
+ * @author    Emmanuel Dyan
+ * @author    Rémi Sauvat
  * @copyright 2017 Emmanuel Dyan
  *
- * @package edyan/neuralyzer
+ * @package   edyan/neuralyzer
  *
- * @license GNU General Public License v2.0
+ * @license   GNU General Public License v2.0
  *
- * @link https://github.com/edyan/neuralyzer
+ * @link      https://github.com/edyan/neuralyzer
  */
 
 namespace Inet\Neuralyzer\Anonymizer;
@@ -48,6 +48,11 @@ abstract class AbstractAnonymizer
      * @var array
      */
     protected $configEntites = [];
+
+    /**
+     * @var array
+     */
+    protected $fakers = [];
 
     /**
      * Process the entity according to the anonymizer type
@@ -126,13 +131,26 @@ abstract class AbstractAnonymizer
      *
      * @return array
      */
-    public function generateFakeData(string $entity, $faker): array
+    public function generateFakeData(string $entity): array
     {
         $this->checkEntityIsInConfig($entity);
 
         $entityCols = $this->configEntites[$entity]['cols'];
         $entity = [];
         foreach ($entityCols as $colName => $colProps) {
+            if (!isset($this->fakers[$entity][$colProps['method']])) {
+                $faker = \Faker\Factory::create($this->configuration->getLocale());
+                if ($colProps['unique']) {
+                    $faker = $faker->unique();
+                }
+                else {
+                    $faker = $faker->optional();
+                }
+                $this->fakers[$entity][$colProps['method']] = $faker;
+            }
+
+            $faker = $this->fakers[$entity][$colProps['method']];
+
             $args = empty($colProps['params']) ? [] : $colProps['params'];
             $data = call_user_func_array([$faker, $colProps['method']], $args);
             if ($data instanceof \DateTime) {
