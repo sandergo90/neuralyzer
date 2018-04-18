@@ -56,6 +56,13 @@ abstract class AbstractAnonymizer
      */
     protected $configEntites = [];
 
+
+    /**
+     * @var array
+     */
+    protected $fakers = [];
+
+
     /**
      * Process the entity according to the anonymizer type
      *
@@ -133,17 +140,29 @@ abstract class AbstractAnonymizer
      * Generate fake data for an entity and return it as an Array
      *
      * @param string  $entity
-     * @param UniqueGenerator $faker
      *
      * @return array
      */
-    public function generateFakeData($entity, UniqueGenerator $faker)
+    public function generateFakeData($entity)
     {
         $this->checkEntityIsInConfig($entity);
 
         $entityCols = $this->configEntites[$entity]['cols'];
         $entity = [];
         foreach ($entityCols as $colName => $colProps) {
+            if (!isset($this->fakers[$entity][$colProps['method']])) {
+                $faker = \Faker\Factory::create($this->configuration->getLocale());
+                if ($colProps['unique']) {
+                    $faker = $faker->unique();
+                }
+                else {
+                    $faker = $faker->optional();
+                }
+                $this->fakers[$entity][$colProps['method']] = $faker;
+            }
+
+            $faker = $this->fakers[$entity][$colProps['method']];
+
             $args = empty($colProps['params']) ? [] : $colProps['params'];
             $data = call_user_func_array([$faker, $colProps['method']], $args);
             if ($data instanceof \DateTime) {

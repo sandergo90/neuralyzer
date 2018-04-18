@@ -82,12 +82,9 @@ class DB extends AbstractAnonymizer
 
             $this->pdo->beginTransaction();
 
-            $faker = \Faker\Factory::create($this->configuration->getLocale());
-            $faker = $faker->unique();
-
             while ($row = $res->fetch()) {
                 $val = $row[$key];
-                $data = $this->generateFakeData($table, $faker);
+                $data = $this->generateFakeData($table);
 
                 if ($pretend === false) {
                     $this->runUpdate($table, $data, $key, $val);
