@@ -1,17 +1,25 @@
 {
-    "name": "edyan/neuralyzer",
-    "description": "Library and CLI for Data anonymization",
+    "name": "sandergo90/neuralyzer",
+    "description": "Library and CLI for Data anonymization, Fork of edyan/neuralyzer",
     "type": "library",
-    "keywords": ["anonymization"],
+    "keywords": [
+        "anonymization"
+    ],
     "authors": [
         {
             "name": "Emmanuel Dyan",
             "email": "emmanueldyan@gmail.com"
+        },
+        {
+            "name": "Sander Goossens",
+            "email": "sander@kodeus.be"
         }
     ],
     "license": "GPL-2.0",
     "minimum-stability": "stable",
-    "bin": ["bin/anon"],
+    "bin": [
+        "bin/anon"
+    ],
     "require": {
         "php": ">=7.0",
         "fzaninotto/faker": "^1",
