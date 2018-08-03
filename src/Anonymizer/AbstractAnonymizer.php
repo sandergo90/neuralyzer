@@ -138,18 +138,15 @@ abstract class AbstractAnonymizer
         $entityCols = $this->configEntites[$entity]['cols'];
         $entity = [];
         foreach ($entityCols as $colName => $colProps) {
-            if (!isset($this->fakers[$entity][$colProps['method']])) {
+            if (!isset($this->fakers[$colName][$colProps['method']])) {
                 $faker = \Faker\Factory::create($this->configuration->getLocale());
                 if ($colProps['unique']) {
                     $faker = $faker->unique();
                 }
-                else {
-                    $faker = $faker->optional();
-                }
-                $this->fakers[$entity][$colProps['method']] = $faker;
+                $this->fakers[$colName][$colProps['method']] = $faker;
             }
 
-            $faker = $this->fakers[$entity][$colProps['method']];
+            $faker = $this->fakers[$colName][$colProps['method']];
 
             $args = empty($colProps['params']) ? [] : $colProps['params'];
             $data = call_user_func_array([$faker, $colProps['method']], $args);
